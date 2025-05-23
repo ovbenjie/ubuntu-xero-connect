@@ -226,14 +226,14 @@ def get_invoices():
 
 @app.route("/login")
 def login():
-    # redirect_url = url_for("xero_auth_redirect", _external=True)
-    redirect_url = "https://pettycashdevrender.onrender.com/xero_auth_redirect"
+    redirect_url = url_for("callback", _external=True)
+    # redirect_url = "https://pettycashdevrender.onrender.com/xero_auth_redirect"
     response = xero.authorize(callback_uri=redirect_url)
     return response
 
 
-@app.route("/xero_auth_redirect")
-def xero_auth_redirect():
+@app.route("/callback")
+def callback():
     try:
         response = xero.authorized_response()
     except Exception as e:
