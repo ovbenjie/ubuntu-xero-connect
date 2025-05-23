@@ -226,8 +226,8 @@ def get_invoices():
 
 @app.route("/login")
 def login():
-    redirect_url = url_for("callback", _external=True)
-    # redirect_url = "https://pettycashdevrender.onrender.com/xero_auth_redirect"
+    # redirect_url = url_for("callback", _external=True)
+    redirect_url = "https://ubuntu-xero-connect.onrender.com/callback"
     response = xero.authorize(callback_uri=redirect_url)
     return response
 
