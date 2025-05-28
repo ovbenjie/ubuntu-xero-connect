@@ -125,86 +125,86 @@ def tenants():
     )
 
 
-@app.route("/create-contact-person")
-@xero_token_required
-def create_contact_person():
-    xero_tenant_id = get_xero_tenant_id()
-    accounting_api = AccountingApi(api_client)
+# @app.route("/create-contact-person")
+# @xero_token_required
+# def create_contact_person():
+#     xero_tenant_id = get_xero_tenant_id()
+#     accounting_api = AccountingApi(api_client)
 
-    contact_person = ContactPerson(
-        first_name="John",
-        last_name="Smith",
-        email_address="john.smith@24locks.com",
-        include_in_emails=True,
-    )
-    contact = Contact(
-        name="FooBar",
-        first_name="Foo",
-        last_name="Bar",
-        email_address="ben.bowden@24locks.com",
-        contact_persons=[contact_person],
-    )
-    contacts = Contacts(contacts=[contact])
-    try:
-        created_contacts = accounting_api.create_contacts(
-            xero_tenant_id, contacts=contacts
-        )  # type: Contacts
-    except AccountingBadRequestException as exception:
-        sub_title = "Error: " + exception.reason
-        code = jsonify(exception.error_data)
-    else:
-        sub_title = "Contact {} created.".format(
-            getvalue(created_contacts, "contacts.0.name", "")
-        )
-        code = serialize_model(created_contacts)
+#     contact_person = ContactPerson(
+#         first_name="John",
+#         last_name="Smith",
+#         email_address="john.smith@24locks.com",
+#         include_in_emails=True,
+#     )
+#     contact = Contact(
+#         name="FooBar",
+#         first_name="Foo",
+#         last_name="Bar",
+#         email_address="ben.bowden@24locks.com",
+#         contact_persons=[contact_person],
+#     )
+#     contacts = Contacts(contacts=[contact])
+#     try:
+#         created_contacts = accounting_api.create_contacts(
+#             xero_tenant_id, contacts=contacts
+#         )  # type: Contacts
+#     except AccountingBadRequestException as exception:
+#         sub_title = "Error: " + exception.reason
+#         code = jsonify(exception.error_data)
+#     else:
+#         sub_title = "Contact {} created.".format(
+#             getvalue(created_contacts, "contacts.0.name", "")
+#         )
+#         code = serialize_model(created_contacts)
 
-    return render_template(
-        "code.html", title="Create Contacts", code=code, sub_title=sub_title
-    )
+#     return render_template(
+#         "code.html", title="Create Contacts", code=code, sub_title=sub_title
+#     )
 
 
-@app.route("/create-multiple-contacts")
-@xero_token_required
-def create_multiple_contacts():
-    xero_tenant_id = get_xero_tenant_id()
-    accounting_api = AccountingApi(api_client)
+# @app.route("/create-multiple-contacts")
+# @xero_token_required
+# def create_multiple_contacts():
+#     xero_tenant_id = get_xero_tenant_id()
+#     accounting_api = AccountingApi(api_client)
 
-    contact = Contact(
-        name="George Jetson",
-        first_name="George",
-        last_name="Jetson",
-        email_address="george.jetson@aol.com",
-    )
-    # Add the same contact twice - the first one will succeed, but the
-    # second contact will fail with a validation error which we'll show.
-    contacts = Contacts(contacts=[contact, contact])
-    try:
-        created_contacts = accounting_api.create_contacts(
-            xero_tenant_id, contacts=contacts, summarize_errors=False
-        )  # type: Contacts
-    except AccountingBadRequestException as exception:
-        sub_title = "Error: " + exception.reason
-        result_list = None
-        code = jsonify(exception.error_data)
-    else:
-        sub_title = ""
-        result_list = []
-        for contact in created_contacts.contacts:
-            if contact.has_validation_errors:
-                error = getvalue(contact.validation_errors, "0.message", "")
-                result_list.append("Error: {}".format(error))
-            else:
-                result_list.append("Contact {} created.".format(contact.name))
+#     contact = Contact(
+#         name="George Jetson",
+#         first_name="George",
+#         last_name="Jetson",
+#         email_address="george.jetson@aol.com",
+#     )
+#     # Add the same contact twice - the first one will succeed, but the
+#     # second contact will fail with a validation error which we'll show.
+#     contacts = Contacts(contacts=[contact, contact])
+#     try:
+#         created_contacts = accounting_api.create_contacts(
+#             xero_tenant_id, contacts=contacts, summarize_errors=False
+#         )  # type: Contacts
+#     except AccountingBadRequestException as exception:
+#         sub_title = "Error: " + exception.reason
+#         result_list = None
+#         code = jsonify(exception.error_data)
+#     else:
+#         sub_title = ""
+#         result_list = []
+#         for contact in created_contacts.contacts:
+#             if contact.has_validation_errors:
+#                 error = getvalue(contact.validation_errors, "0.message", "")
+#                 result_list.append("Error: {}".format(error))
+#             else:
+#                 result_list.append("Contact {} created.".format(contact.name))
 
-        code = serialize_model(created_contacts)
+#         code = serialize_model(created_contacts)
 
-    return render_template(
-        "code.html",
-        title="Create Multiple Contacts",
-        code=code,
-        result_list=result_list,
-        sub_title=sub_title,
-    )
+#     return render_template(
+#         "code.html",
+#         title="Create Multiple Contacts",
+#         code=code,
+#         result_list=result_list,
+#         sub_title=sub_title,
+#     )
 
 
 @app.route("/invoices")
