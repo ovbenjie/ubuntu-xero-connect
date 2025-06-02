@@ -22,8 +22,7 @@ dictConfig(logging_settings.default_settings)
 
 # configure main flask application
 app = Flask(__name__)
-app.config.from_object("default_settings")
-app.config.from_pyfile("config.py", silent=True)
+
 app.config["CLIENT_ID"] = os.environ.get('CLIENT_ID')
 app.config["CLIENT_SECRET"] = os.environ.get('CLIENT_SECRET')
 
