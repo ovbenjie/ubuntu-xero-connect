@@ -14,10 +14,8 @@ from xero_python.api_client.oauth2 import OAuth2Token
 from xero_python.exceptions import AccountingBadRequestException
 from xero_python.identity import IdentityApi
 from xero_python.utils import getvalue
-
 import logging_settings
 from utils import jsonify, serialize_model
-
 dictConfig(logging_settings.default_settings)
 
 # configure main flask application
@@ -26,11 +24,9 @@ app.config.from_object("default_settings")
 app.config["CLIENT_ID"] = os.environ.get('CLIENT_ID')
 app.config["CLIENT_SECRET"] = os.environ.get('CLIENT_SECRET')
 
-
 if app.config["ENV"] != "production":
     # allow oauth2 loop to run over http (used for local testing only)
     os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
-
 # configure persistent session cache
 Session(app)
 
@@ -51,7 +47,6 @@ xero = oauth.remote_app(
     "files accounting.settings.read accounting.settings accounting.attachments payroll.payslip payroll.settings files.read openid assets.read profile payroll.employees projects.read email accounting.contacts.read accounting.attachments.read projects assets accounting.contacts payroll.timesheets accounting.budgets.read",
 )  # type: OAuth2Application
 
-
 # configure xero-python sdk client
 api_client = ApiClient(
     Configuration(
@@ -62,7 +57,6 @@ api_client = ApiClient(
     ),
     pool_threads=1,
 )
-
 
 # configure token persistence and exchange point between flask-oauthlib and xero-python
 @xero.tokengetter
